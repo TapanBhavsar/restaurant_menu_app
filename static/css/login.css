@@ -1,0 +1,26 @@
+#box{
+    position: absolute;
+
+    left: 50%;
+  
+    top: 50%;
+  
+    transform: translate(-50%, -50%);
+  
+    border: 5px solid lightblue;
+  
+    padding: 10px;
+}
+
+.text-line {
+    background-color: transparent;
+    color: #eeeeee;
+    outline: none;
+    outline-style: none;
+    outline-offset: 0;
+    border-top: none;
+    border-left: none;
+    border-right: none;
+    border-bottom: solid #eeeeee 1px;
+    padding: 3px 10px;
+}
