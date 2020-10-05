@@ -6,12 +6,12 @@
     </body>
         <div id="login">
             <h3> Log In</h3>
-            <form action="/#" method="post" id="login_form">
+            <form action="{{ url_for('login_validation') }}" method="post" id="login_form">
             <label for="username">Username:</label><br>
-            <input type="email" id="username">
+            <input type="email" id="username" name="username">
             <br><br>
             <label for="password">Password:</label><br>
-            <input type="password" id="password">
+            <input type="password" id="password" name="password">
             </form>
 
             <button type="submit" form="login_form" value="Submit">Submit</button>
