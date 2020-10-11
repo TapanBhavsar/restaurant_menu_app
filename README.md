@@ -1,4 +1,4 @@
-# restaurant_menu_app (Still working)
+# restaurant_menu_app (WIP)
 
 To make it run:
 
