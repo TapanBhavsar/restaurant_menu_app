@@ -5,5 +5,5 @@ table = declarative_base()
 
 class User(table):
     __tablename__ = 'User'
-    user_name = Column(String(80),primary_key = True)
-    password = Column(Integer, nullable = False)
+    user_name = Column(String(30), primary_key = True)
+    password = Column(String(16), nullable = False)

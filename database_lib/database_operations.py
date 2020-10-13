@@ -9,7 +9,11 @@ class DatabaseOperations(metaclass=abc.ABCMeta):
         pass
 
     @abc.abstractmethod
-    def read_data(self, query):
+    def add_data(self, data):
+        pass
+
+    @abc.abstractmethod
+    def read_data(self, table, filter):
         pass
     
     @abc.abstractmethod
