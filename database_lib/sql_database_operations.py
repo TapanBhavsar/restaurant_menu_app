@@ -1,5 +1,6 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
+from jinja2 import Template
 
 import os
 
@@ -11,7 +12,10 @@ class SqlDatabaseOperations(DatabaseOperations):
         self.database_folder = "sql_database"
         if not os.path.exists(self.database_folder):
             os.makedirs(self.database_folder)
-            
+
+        self.QUERY_TEMPLATE_ONE = "self._session.query(table).filter_by({{ filter }}).one()"
+        self.QUERY_TEMPLATE = "self._session.query(table).filter_by({{ filter }})"
+        
         self._engine = None
         self._session = None
 
@@ -29,11 +33,13 @@ class SqlDatabaseOperations(DatabaseOperations):
         self._session.add(data)
         self._session.commit()
 
-    def read_data(self, table, filter, one=True):
+    def read_data(self, table, filter, one=False):
         if one:
-            return self._session.query(table).filter_by(user_name = filter).one()
+            query_template = Template(self.QUERY_TEMPLATE_ONE)
+            return eval(query_template.render(table=table, filter=filter))
         else:
-            return self._session.query(table).filter_by(user_name = filter)
+            query_template = Template(self.QUERY_TEMPLATE)
+            return eval(query_template.render(table=table, filter=filter))
 
     def update_data(self, query, data):
         pass
