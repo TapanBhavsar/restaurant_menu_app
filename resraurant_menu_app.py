@@ -1,4 +1,5 @@
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for, session
+import os
 
 from database_lib.sql_database_operations import SqlDatabaseOperations
 from database_lib.tables.user import table as user_table
@@ -28,6 +29,7 @@ def login_validation():
     app.logger.debug(f"user name is {user_name}\npassword is {password}")
     query_data = sql_operator.read_data(table=User, filter=f"user_name='{user_name}'", one=True)
     if query_data.user_name==user_name and query_data.password==password:
+        session['logged_in'] = True
         app.logger.debug(f"access granted.")
         return redirect('/query_home')
     else:
@@ -48,7 +50,12 @@ def add_signup():
 
 @app.route('/query_home', methods=['GET'])
 def query_home():
-    return render_template('query_home.html')
+    if session.get('logged_in'):
+        return render_template('query_home.html')
+    else:
+        return redirect('/')
     
 if __name__ == '__main__':
+    MAX_USERS = 12
+    app.secret_key = os.urandom(MAX_USERS)
     app.run(host="0.0.0.0", port=8080, debug=True)
