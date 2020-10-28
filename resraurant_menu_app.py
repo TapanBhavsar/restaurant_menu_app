@@ -16,7 +16,10 @@ sql_operator.create_database(Configuration.SIGN_UP_DATABASE_NAME, user_table)
 @app.route('/')
 @app.route('/login')
 def log_in():
-    return render_template("login.html")
+    if session.get('logged_in') == False:
+        return render_template("login.html", error = "Entered username or password are invalid.")
+    else:
+        return render_template("login.html")
 
 @app.route('/sign_up')
 def sign_up():
@@ -33,6 +36,7 @@ def login_validation():
         app.logger.debug(f"access granted.")
         return redirect('/query_home')
     else:
+        session['logged_in'] = False
         return redirect('/')
 
 @app.route('/add_signup', methods = ['POST'])

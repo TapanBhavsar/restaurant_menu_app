@@ -1,11 +1,30 @@
 <html>
     <head>
         <title> Query Home </title>
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/query_home.css') }}">
     </head>
     <body>
-        <h2> Welcome to query home</h2>
-        <div>
-            
+        <h2 id="query_home_header"> Welcome to query home</h2>
+        
+        <div class='row'>
+            <div class= 'column'>
+                <h3 class='query_header'>Add new Entry</h3>
+            </div>
+
+            <div class= 'column'>
+                <h3 class='query_header'>Read an Entry</h3>
+            </div>
         </div>
+
+        <div class='row'>
+            <div class= 'column'>
+                <h3 class='query_header'>Update an Entry</h3>
+            </div>
+
+            <div class= 'column'>
+                <h3 class='query_header'>Delete an Entry</h3>
+            </div>
+        </div>
+    
     </body>
 </html>

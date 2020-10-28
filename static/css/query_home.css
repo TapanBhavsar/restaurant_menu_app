@@ -1,0 +1,21 @@
+.row{
+    column-count: 2;
+}
+
+#query_home_header{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.column {
+    column-gap: 40px;
+}
+
+.query_header{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
