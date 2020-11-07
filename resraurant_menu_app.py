@@ -13,6 +13,9 @@ app = Flask(__name__)
 sql_operator = SqlDatabaseOperations()
 sql_operator.create_database(Configuration.SIGN_UP_DATABASE_NAME, user_table)
 
+restaurant_query_operator = SqlDatabaseOperations()
+restaurant_query_operator.create_database(Configuration.RESTAURANT_DATABASE, user_table)
+
 @app.route('/')
 @app.route('/login')
 def log_in():
@@ -59,6 +62,24 @@ def query_home():
     else:
         return redirect('/')
     
+@app.route('/new_entry', methods=['POST'])
+def new_entry():
+    restaurant_name = request.form['restaurant_name']
+    
+    return redirect('/query_home')
+
+@app.route('/read_entry', methods=['POST'])
+def read_entry():
+    return redirect('/query_home')
+
+@app.route('/update_entry', methods=['POST'])
+def update_entry():
+    return redirect('/query_home')
+
+@app.route('/delete_entry', methods=['POST'])
+def delete_entry():
+    return redirect('/query_home')
+
 if __name__ == '__main__':
     MAX_USERS = 12
     app.secret_key = os.urandom(MAX_USERS)
