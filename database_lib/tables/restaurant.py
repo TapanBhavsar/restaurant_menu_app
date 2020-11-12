@@ -1,6 +1,8 @@
-from sqlalchemy import Integer, String, Column
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy import ForeignKey, Integer, String, Column
 
-class Restaurant(Base):
-    __tablename__ = 'restaurant'
-    name = Column(String(80), nullable = False)
-    id = Column(Integer, primary_key = True)
+table = declarative_base()
+
+class Restaurant(table):
+    __tablename__ = 'Restaurant'
+    name = Column(String(50), primary_key = True)

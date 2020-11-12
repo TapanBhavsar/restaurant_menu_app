@@ -1,10 +1,14 @@
 from flask import Flask, render_template, request, redirect, url_for, session
 import os
 
+from sqlalchemy import exc
+
 from database_lib.sql_database_operations import SqlDatabaseOperations
 from database_lib.tables.user import table as user_table
+from database_lib.tables.restaurant import table as restaurant_table
 
 from database_lib.tables.user import User
+from database_lib.tables.restaurant import Restaurant
 
 from configuration import Configuration
 
@@ -14,7 +18,16 @@ sql_operator = SqlDatabaseOperations()
 sql_operator.create_database(Configuration.SIGN_UP_DATABASE_NAME, user_table)
 
 restaurant_query_operator = SqlDatabaseOperations()
-restaurant_query_operator.create_database(Configuration.RESTAURANT_DATABASE, user_table)
+restaurant_query_operator.create_database(Configuration.RESTAURANT_DATABASE, restaurant_table)
+
+
+def available_restautant(restaurant_name):
+        available_flag = False
+        try:
+            restaurant_query_operator.add_data(Restaurant(name=restaurant_name))
+        except exc.IntegrityError as error:
+            available_flag = True
+        return available_flag
 
 @app.route('/')
 @app.route('/login')
@@ -62,23 +75,15 @@ def query_home():
     else:
         return redirect('/')
     
-@app.route('/new_entry', methods=['POST'])
-def new_entry():
-    restaurant_name = request.form['restaurant_name']
-    
-    return redirect('/query_home')
-
-@app.route('/read_entry', methods=['POST'])
-def read_entry():
-    return redirect('/query_home')
-
-@app.route('/update_entry', methods=['POST'])
-def update_entry():
-    return redirect('/query_home')
-
-@app.route('/delete_entry', methods=['POST'])
-def delete_entry():
-    return redirect('/query_home')
+@app.route('/search', methods=['POST'])
+def search():
+    if session.get('logged_in'):
+        restaurant_name = request.form['restaurant_name']
+        if available_restautant(restaurant_name):
+            pass # TODO add read all menu items and pass to html_page/update link
+        return redirect('/query_home')
+    else:
+        return redirect('/')
 
 if __name__ == '__main__':
     MAX_USERS = 12
