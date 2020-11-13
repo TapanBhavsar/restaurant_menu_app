@@ -1,7 +1,7 @@
-from flask import Flask, render_template, request, redirect, url_for, session
+from flask import Flask, render_template, request, redirect, url_for, session, jsonify, make_response
 import os
 
-from sqlalchemy import exc
+from sqlalchemy.orm.exc import NoResultFound
 
 from database_lib.sql_database_operations import SqlDatabaseOperations
 from database_lib.tables.user import table as user_table
@@ -22,11 +22,11 @@ restaurant_query_operator.create_database(Configuration.RESTAURANT_DATABASE, res
 
 
 def available_restautant(restaurant_name):
-        available_flag = False
+        available_flag = True
         try:
-            restaurant_query_operator.add_data(Restaurant(name=restaurant_name))
-        except exc.IntegrityError as error:
-            available_flag = True
+            restaurant_availability = restaurant_query_operator.read_data(Restaurant, f"name='{restaurant_name}'", True)
+        except NoResultFound:
+            available_flag = False
         return available_flag
 
 @app.route('/')
@@ -78,10 +78,15 @@ def query_home():
 @app.route('/search', methods=['POST'])
 def search():
     if session.get('logged_in'):
-        restaurant_name = request.form['restaurant_name']
+        req = request.get_json()
+        restaurant_name = req.get("restaurant_name")
+        # add entry format for menu items
         if available_restautant(restaurant_name):
             pass # TODO add read all menu items and pass to html_page/update link
-        return redirect('/query_home')
+            res = make_response(jsonify({"message": "OK"}), 200)
+        else:
+            res = make_response(jsonify({"message": "NOT OK"}), 200)
+        return res
     else:
         return redirect('/')
 

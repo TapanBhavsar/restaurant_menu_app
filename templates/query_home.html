@@ -2,20 +2,32 @@
     <head>
         <title> Query Home </title>
         <link rel="stylesheet" href="{{ url_for('static', filename='css/query_home.css') }}">
+         <script src="{{ url_for('static', filename='scripts/query_home.js') }}"></script> 
     </head>
     <body>
         <h2 id="query_home_header"> Welcome to query home</h2>
         
         <div class= 'restaurant_query'>
             <h3 class='query_header'>Search for any restaurant data</h3>
+            <div class="form-group">
+                <label for="restaurant">Restaurant Name:</label>
+                <input type="text"  id="restaurant" placeholder="restaurant name">
+            </div>
 
-            <form id="search" class="restaurant_form" action="{{ url_for('search') }}" method="post">
-            <label for="restaurant_name">Restaurant Name:</label>
-            <input type="text" id="restaurant_name" name="restaurant_name">
-            <br><br>
-            </form>
-            <button type="submit" form="search" value="Submit">Search</button>
+            <button type="submit" value="Submit" onclick="submit_search();">Search</button>
         </div>
-    
+
+        <div id="new_item_entry" style="display: none">
+            <label for="menu_name">Menu Name:</label>
+            <input type="text"  id="menu_name" placeholder="dish name">
+            <label for="description">Description:</label>
+            <input type="text"  id="description" placeholder="add recipe description">
+            <label for="course">Course:</label>
+            <input type="text"  id="course" placeholder="add course section">
+            <label for="price">Price:</label>
+            <input type="text"  id="price" placeholder="add dish price">
+            <button type="submit" value="Submit" onclick="submit_item();">add Item</button>
+        </div>
+
     </body>
 </html>
