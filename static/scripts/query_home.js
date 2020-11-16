@@ -1,3 +1,17 @@
+function create_item_child(item) {
+    var div = document.createElement("div");
+    var text = "<br><br>"
+    text += item["name"] + "<br>";
+    text += item["description"] + "<br>";
+    text += item["course"] + "<br>";
+    text += item["price"] + "<br>";
+    div.id = item["name"];
+    div.innerHTML = text;
+  
+    document.getElementById("available_items").appendChild(div); 
+}
+
+
 function submit_search() {
 
     var restaurant = document.getElementById("restaurant");
@@ -21,8 +35,11 @@ function submit_search() {
           return;
         }
         response.json().then(function (data) {
-          console.log(data);
+          // console.log(data);
           if(data["message"] == "OK"){
+            // TODO create html format for all results by adding into innerHTML or new div
+            var available_menu_items = data["result"]
+            available_menu_items.forEach(create_item_child);
             document.getElementById("new_item_entry").style.display= 'block'; // or none to remove
             var restaurant_name = document.getElementById("restaurant_name");
             restaurant_name.innerHTML = restaurant.value;

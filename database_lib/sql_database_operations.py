@@ -14,7 +14,7 @@ class SqlDatabaseOperations(DatabaseOperations):
             os.makedirs(self.database_folder)
 
         self.QUERY_TEMPLATE_ONE = "self._session.query(table).filter_by({{ filter }}).one()"
-        self.QUERY_TEMPLATE = "self._session.query(table).filter_by({{ filter }})"
+        self.QUERY_TEMPLATE = "self._session.query(table).filter_by({{ filter }}).all()"
         
         self._engine = None
         self._session = None

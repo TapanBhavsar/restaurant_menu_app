@@ -29,6 +29,14 @@ def available_restautant(restaurant_name):
             available_flag = False
         return available_flag
 
+def get_menu_item_dict(menu_item):
+    return {
+        "name":menu_item.name,
+        "description": menu_item.description,
+        "course": menu_item.course,
+        "price": menu_item.price,
+    }
+
 @app.route('/')
 @app.route('/login')
 def log_in():
@@ -80,10 +88,11 @@ def search():
     if session.get('logged_in'):
         req = request.get_json()
         restaurant_name = req.get("restaurant_name")
-        # add entry format for menu items
         if available_restautant(restaurant_name):
-            pass # TODO add read all menu items and pass to html_page/update link
-            res = make_response(jsonify({"message": "OK"}), 200)
+            restaurant_menu_items = restaurant_query_operator.read_data(table=MenuItem,
+                                                                        filter=f"restaurant_name='{restaurant_name}'")
+            menu_item_response = list(map(get_menu_item_dict, restaurant_menu_items))
+            res = make_response(jsonify({"message": "OK", "result": menu_item_response}), 200)
         else:
             restaurant_query_operator.add_data(Restaurant(name=restaurant_name))
             res = make_response(jsonify({"message": "NOT OK"}), 200)
