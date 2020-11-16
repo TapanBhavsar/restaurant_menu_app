@@ -5,10 +5,11 @@ from sqlalchemy.orm.exc import NoResultFound
 
 from database_lib.sql_database_operations import SqlDatabaseOperations
 from database_lib.tables.user import table as user_table
-from database_lib.tables.restaurant import table as restaurant_table
+from database_lib.tables.menu_item import table as menu_item_table
 
 from database_lib.tables.user import User
 from database_lib.tables.restaurant import Restaurant
+from database_lib.tables.menu_item import MenuItem
 
 from configuration import Configuration
 
@@ -18,8 +19,7 @@ sql_operator = SqlDatabaseOperations()
 sql_operator.create_database(Configuration.SIGN_UP_DATABASE_NAME, user_table)
 
 restaurant_query_operator = SqlDatabaseOperations()
-restaurant_query_operator.create_database(Configuration.RESTAURANT_DATABASE, restaurant_table)
-
+restaurant_query_operator.create_database(Configuration.RESTAURANT_DATABASE, menu_item_table)
 
 def available_restautant(restaurant_name):
         available_flag = True
@@ -85,8 +85,30 @@ def search():
             pass # TODO add read all menu items and pass to html_page/update link
             res = make_response(jsonify({"message": "OK"}), 200)
         else:
+            restaurant_query_operator.add_data(Restaurant(name=restaurant_name))
             res = make_response(jsonify({"message": "NOT OK"}), 200)
         return res
+    else:
+        return redirect('/')
+
+@app.route('/new_item', methods=['POST'])
+def new_item():
+    if session.get('logged_in'):
+        try:
+            request_json = request.get_json()
+            app.logger.debug(f"response : {request_json}")
+            menu_item = MenuItem(name = request_json.get("item_name"),
+                                description = request_json.get("description"),
+                                course = request_json.get("course"),
+                                price = request_json.get("price"),
+                                restaurant_name = request_json.get("restaurant_name"),
+                                )
+            restaurant_query_operator.add_data(menu_item)
+            response = make_response(jsonify({"message": "done"}), 200)
+        except:
+            response = make_response(jsonify({"message":"Server error"}), 500)
+        finally:
+            return response
     else:
         return redirect('/')
 

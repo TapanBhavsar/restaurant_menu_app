@@ -31,10 +31,7 @@ class SqlDatabaseOperations(DatabaseOperations):
 
     def add_data(self, data):
         self._session.add(data)
-        try:
-            self._session.commit()
-        except:
-            self._session.rollback()
+        self._session.commit()
 
     def read_data(self, table, filter, one=False):
         if one:
