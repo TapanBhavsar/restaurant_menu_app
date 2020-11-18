@@ -121,6 +121,10 @@ def new_item():
     else:
         return redirect('/')
 
+@app.route('/update_item', methods=["POST"])
+def update_item():
+    return make_response(jsonify({"message": "done"}), 200)
+
 if __name__ == '__main__':
     MAX_USERS = 12
     app.secret_key = os.urandom(MAX_USERS)
