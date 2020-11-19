@@ -111,7 +111,7 @@ def new_item():
                                 course = request_json.get("course"),
                                 price = request_json.get("price"),
                                 restaurant_name = request_json.get("restaurant_name"),
-                                )
+                                )            
             restaurant_query_operator.add_data(menu_item)
             response = make_response(jsonify({"message": "done"}), 200)
         except:
@@ -123,6 +123,25 @@ def new_item():
 
 @app.route('/update_item', methods=["POST"])
 def update_item():
+    request_json = request.get_json()
+    updated_item = restaurant_query_operator.read_data(MenuItem,
+                                                       filter=f"name='{request_json.get('item_name')}', restaurant_name='{request_json.get('restaurant_name')}'",
+                                                       one=True)
+    updated_item.name = request_json.get("item_name")
+    updated_item.description = request_json.get("description")
+    updated_item.course = request_json.get("course")
+    updated_item.price = request_json.get("price")
+    updated_item.restaurant_name = request_json.get("restaurant_name")
+    restaurant_query_operator.add_data(updated_item)
+    return make_response(jsonify({"message": "done"}), 200)
+
+@app.route('/delete_item', methods=['POST'])
+def delete_item():
+    request_json = request.get_json()
+    data = restaurant_query_operator.read_data(MenuItem,
+                                               filter=f"name='{request_json.get('item_name')}', restaurant_name='{request_json.get('restaurant_name')}'",
+                                               one=True)
+    restaurant_query_operator.delete_data(data)
     return make_response(jsonify({"message": "done"}), 200)
 
 if __name__ == '__main__':

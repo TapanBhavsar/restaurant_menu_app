@@ -44,8 +44,9 @@ class SqlDatabaseOperations(DatabaseOperations):
     def update_data(self, query, data):
         pass
 
-    def delete_data(self, query):
-        pass
+    def delete_data(self, data):
+        self._session.delete(data)
+        self._session.commit()
 
     def _get_database_path(self, database_name):
         if database_name.endswith(".db"):

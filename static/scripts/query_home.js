@@ -3,8 +3,8 @@ function create_item_child(item) {
 
     div.innerHTML = `<br><br>
     <form id="${item.name}" action="" onsubmit="return false">
-    <label for="menu_name">Menu Name:</label>
-    <input type="text"  name="menu_name" value="${item.name}"><br>
+    <label for="menu_name">Menu Name:${item.name}</label>
+    <input type="text"  name="menu_name" value="${item.name}" readonly><br>
     <label for="description">Description:</label>
     <input type="text"  name="description" value="${item.description}"><br>
     <label for="course">Course:</label>
@@ -13,8 +13,8 @@ function create_item_child(item) {
     <input type="text"  name="price" value="${item.price}"><br>
     
     <button type="submit" form="${item.name}" onclick="update_item('${item.name}');">Update</button>
-    </form>`
-
+    <button type="submit" form="${item.name}" onclick="delete_item('${item.name}');">Delete</button>
+    </form>`;
   
     document.getElementById("available_items").appendChild(div); 
 }
@@ -132,6 +132,42 @@ function update_item(item){
           console.log(data);
           var submit_response = document.getElementById("submit_response");
           submit_response.innerHTML = data["message"];
+        });
+      })
+      .catch(function (error) {
+        console.log("Fetch error: " + error);
+      });
+  }
+
+  function delete_item(item){
+    var restaurant_name = document.getElementById("restaurant");
+    var item_form = document.getElementById(item);
+
+    var menu_item = {
+      restaurant_name: restaurant_name.value,
+      item_name: item_form.elements["menu_name"].value,
+    }
+
+    fetch(`${window.origin}/delete_item`, {
+      method: "POST",
+      credentials: "include",
+      body: JSON.stringify(menu_item),
+      cache: "no-cache",
+      headers: new Headers({
+        "content-type": "application/json"
+      })
+    })
+      .then(function (response) {
+        if (response.status !== 200) {
+          console.log(`Looks like there was a problem. Status code: ${response.status}`);
+          return;
+        }
+        response.json().then(function (data) {
+          console.log(data);
+          if (data.message == "done") {
+            var div = document.getElementById(item);
+            div.remove();
+          }
         });
       })
       .catch(function (error) {
